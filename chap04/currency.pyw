@@ -1,3 +1,5 @@
+#! /usr/bin/python
+
 import sys
 import urllib.request
 from PyQt4.QtCore import *
