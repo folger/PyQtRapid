@@ -1,4 +1,4 @@
-#! /usr/bin/pythonw
+#! /usr/bin/python
 
 import sys
 from math import *
