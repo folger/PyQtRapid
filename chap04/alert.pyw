@@ -1,3 +1,5 @@
+#! /usr/bin/pythonw
+
 import sys
 import time
 from PyQt4.QtCore import *
