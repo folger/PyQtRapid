@@ -1,3 +1,5 @@
+#! /usr/bin/python
+
 import sys
 from functools import partial
 from PyQt4.QtCore import *
