@@ -24,8 +24,7 @@ class NumberFormatDlg(QDialog):
     self.redNegativesCheckBox = QCheckBox("&Red negative numbers")
     self.redNegativesCheckBox.setChecked(format["rednegatives"])
 
-    buttonBox = QDialogButtonBox(QDialogButtonBox.Ok|
-                                QDialogButtonBox.Cancel)
+    buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
 
     self.format = format.copy()
 
@@ -40,11 +39,12 @@ class NumberFormatDlg(QDialog):
     grid.addWidget(buttonBox, 4, 0, 1, 2)
     self.setLayout(grid)
 
-    self.connect(buttonBox, SIGNAL("clicked()"), self.accept)
-    self.connect(buttonBox, SIGNAL("clicked()"), self.reject)
+    self.connect(buttonBox, SIGNAL("accepted()"), self, SLOT("accept()"))
+    self.connect(buttonBox, SIGNAL("rejected()"), self, SLOT("reject()"))
 
   def accept(self):
-    pass
+    print("Yes yes")
+    super(NumberFormatDlg, self).accept()
 
   def numberFormat(self):
     return self.format

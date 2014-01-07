@@ -41,30 +41,6 @@ class PenPropertiesDlg(QDialog):
     self.connect(okButton, SIGNAL("clicked()"), self.accept)
     self.connect(cancelButton, SIGNAL("clicked()"), self.reject)
 
-class DumbForm(QDialog):
-  def __init__(self, parent=None):
-    super(DumbForm, self).__init__(parent)
 
-    self.setWindowTitle("Pen Properties")
-
-    btn = QPushButton("   Click Me   ")
-
-    layout = QVBoxLayout()
-    layout.addWidget(btn)
-    self.setLayout(layout)
-    
-    self.connect(btn, SIGNAL("clicked()"), self.clickme)
-
-  def clickme(self):
-    pendlg = PenPropertiesDlg(self)
-    if pendlg.exec_():
-      print("yeah")
-    else:
-      print("no...")
-
-app = QApplication(sys.argv)
-form = DumbForm()
-form.show()
-app.exec_()
 
 
