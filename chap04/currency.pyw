@@ -1,7 +1,7 @@
 #! /usr/bin/python
 
 import sys
-import urllib.request
+from urllib.request import urlopen
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
@@ -46,9 +46,9 @@ class Form(QDialog):
     self.rates = {}
     try:
       date = "Unknown"
-      fh = urllib.request.urlopen("http://www.bankofcanada.ca"
+      response = urlopen("http://www.bankofcanada.ca"
                           "/en/markets/csv/exchange_eng.csv")
-      for line in fh:
+      for line in response.read().decode().split('\n'):
         if not line or line.startswith(("#", "Closing ")):
           continue
         fields = line.split(",")
