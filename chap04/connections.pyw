@@ -11,26 +11,19 @@ class Connections(QDialog):
 
     self.label = QLabel("You clicked button 'xxxxx'")
 
-    self.btn1 = QPushButton("One")
-    self.btn2 = QPushButton("Two")
-    self.btn3 = QPushButton("Three")
-    self.btn4 = QPushButton("Four")
-    self.btn5 = QPushButton("Five")
+    btns = []
+    for who in ("One", "Two", "Three", "Four", "Five"):
+      btns.append(QPushButton(who))
 
     layout = QHBoxLayout()
-    layout.addWidget(self.btn1)
-    layout.addWidget(self.btn2)
-    layout.addWidget(self.btn3)
-    layout.addWidget(self.btn4)
-    layout.addWidget(self.btn5)
+    for btn in btns:
+      layout.addWidget(btn)
+
     layout.addWidget(self.label)
     self.setLayout(layout)
 
-    self.connect(self.btn1, SIGNAL("clicked()"), partial(self.anyButton, "One"))
-    self.connect(self.btn2, SIGNAL("clicked()"), partial(self.anyButton, "Two"))
-    self.connect(self.btn3, SIGNAL("clicked()"), partial(self.anyButton, "Three"))
-    self.connect(self.btn4, SIGNAL("clicked()"), partial(self.anyButton, "Four"))
-    self.connect(self.btn5, SIGNAL("clicked()"), partial(self.anyButton, "Five"))
+    for btn in btns:
+      self.connect(btn, SIGNAL("clicked()"), partial(self.anyButton, btn.text()))
 
   def anyButton(self, who):
     self.label.setText("You clicked button '%s'" % who)
