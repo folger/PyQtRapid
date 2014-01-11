@@ -84,10 +84,13 @@ class MainWindow(QMainWindow):
                                 (self.editUnMirrorAction, True))
 
         settings = QSettings()
-        recentFilesSetting = settings.value("RecentFiles")
+        self.recentFiles = settings.value("RecentFiles")
         geometrySetting = settings.value("MainWindow/Geometry")
-        self.restoreGeometry(settings.value("MainWindow/Geometry"))
-        self.restoreState(settings.value("MainWindow/State"))
+        if geometrySetting:
+          self.restoreGeometry(geometrySetting)
+        statusSetting = settings.value("MainWindow/State")
+        if statusSetting:
+          self.restoreState(statusSetting)
         
         self.setWindowTitle(self.tr("Image Changer"))
         QTimer.singleShot(0, self.loadInitialFile)
