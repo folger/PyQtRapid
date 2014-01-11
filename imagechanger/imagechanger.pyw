@@ -134,12 +134,9 @@ class MainWindow(QMainWindow):
 
             self.fileMenu.addAction(filePrint)
 
-            self.fileMenu.addSeparator()
-            current = (QString(self.filename)
-                   if self.filename is not None else None)
             recentFiles = []
             for fname in self.recentFiles:
-                if fname != current and QFile.exists(fname):
+                if fname != self.filename and QFile.exists(fname):
                     recentFiles.append(fname)
             if recentFiles:
                 self.fileMenu.addSeparator()
