@@ -7,7 +7,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import helpform
 import newimagedlg
-# import qrc_resources
+import qrc_resources
 
 __version__ = "1.0.0"
 
@@ -16,6 +16,8 @@ class MainWindow(QMainWindow):
   """main window for image changer app"""
   def __init__(self, parent = None):
     super(MainWindow, self).__init__(parent)
+
+    self.setWindowTitle(self.tr("Image Changer"))
 
     self.image = QImage()
     self.dirty = False
@@ -29,7 +31,7 @@ class MainWindow(QMainWindow):
     self.imageLabel.setContextMenuPolicy(Qt.ActionsContextMenu)
     self.setCentralWidget(self.imageLabel)
 
-    logDockWidget = QDockWidget("Log", self)
+    logDockWidget = QDockWidget(self.tr("Log"), self)
     logDockWidget.setObjectName("LogDockWidget")
     logDockWidget.setAllowedAreas(Qt.LeftDockWidgetArea | Qt.RightDockWidgetArea)
 
@@ -44,14 +46,14 @@ class MainWindow(QMainWindow):
     status = self.statusBar()
     status.setSizeGripEnabled(False)
     status.addPermanentWidget(self.sizeLabel)
-    status.showMessage("Ready", 5000)
+    status.showMessage(self.tr("Ready"), 5000)
 
     fileNewAction = self.createAction(self.tr("&New..."),
-                self.fileNew, QKeySequence.New, None,
+                self.fileNew, QKeySequence.New, "filenew",
                 self.tr("Create an image file"))
 
     fileOpenAction = self.createAction(self.tr("&Open..."),
-                self.fileOpen, QKeySequence.Open, None,
+                self.fileOpen, QKeySequence.Open, "fileopen",
                 self.tr("Open an existing image file"))
 
     fileQuitAction = self.createAction(self.tr("&Quit"),
@@ -69,7 +71,7 @@ class MainWindow(QMainWindow):
                    tip=None, checkable=False, signal="triggered()"):
       action = QAction(text, self)
       if icon is not None:
-          action.setIcon(QIcon(":/{0}.png".format(icon)))
+          action.setIcon(QIcon(":/{}.png".format(icon)))
       if shortcut is not None:
           action.setShortcut(shortcut)
       if tip is not None:
