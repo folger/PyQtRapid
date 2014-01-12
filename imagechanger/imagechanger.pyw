@@ -215,7 +215,21 @@ class MainWindow(QMainWindow):
         self.helpMenu.addActions((helpAboutAction, helpHelpAction))
 
     def fileNew(self):
-        QMessageBox.about(self, "Hello", "New ...")
+        if not self.okToContinue():
+            return
+        dialog = newimagedlg.NewImageDlg(self)
+        if dialog.exec_():
+            self.addRecentFile(self.filename)
+            self.image = QImage()
+            for action, check in self.resetableActions:
+                action.setChecked(check)
+            self.image = dialog.image()
+            self.filename = None
+            self.dirty = True
+            self.showImage()
+            self.sizeLabel.setText("%d x %d" % (self.image.width(),
+            self.image.height()))
+            self.updateStatus("Created new image")
 
     def fileOpen(self):
         QMessageBox.about(self, "Hello", "Open ...")
@@ -280,7 +294,18 @@ class MainWindow(QMainWindow):
         return True
 
     def loadInitialFile(self):
-        pass
+        settings = QSettings()
+        fname = settings.value("LastFile")
+        if fname and QFile.exists(fname):
+            self.loadFile(fname)
+
+    def addRecentFile(self, fname):
+        if fname is None:
+            return
+        if not self.recentFiles.contains(fname):
+            self.recentFiles.insert(0, fname)
+            while self.recentFiles.count() > 9:
+                self.recentFiles.pop()
 
     def separator(self):
         separator = QAction(self)
