@@ -116,7 +116,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QTextBrowser" name="textBrowser">
+  <widget class="QTextBrowser" name="output">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -137,7 +137,7 @@
   <zorder>lblPath</zorder>
   <zorder>edPath</zorder>
   <zorder>btnBrowsePath</zorder>
-  <zorder>textBrowser</zorder>
+  <zorder>output</zorder>
  </widget>
  <resources/>
  <connections>

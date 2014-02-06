@@ -1,4 +1,6 @@
 import sys
+import os
+from functools import partial
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from ui_MakePyQt import Ui_MakePyQtDlg
@@ -10,6 +12,10 @@ class MakePyQtDlg(QDialog, Ui_MakePyQtDlg):
         self.setupUi(self)
 
         self.connect(self.btnBrowsePath, SIGNAL("clicked()"), self.browsePath)
+        self.connect(self.btnBuild, SIGNAL("clicked()"),
+            partial(self.process, self.build))
+        self.connect(self.btnClean, SIGNAL("clicked()"),
+            partial(self.process, self.clean))
 
         self.loadSettings()
 
@@ -21,10 +27,49 @@ class MakePyQtDlg(QDialog, Ui_MakePyQtDlg):
             if len(dirs):
                 self.edPath.setText(dirs[0])
 
+    def relativePath(self, path):
+        return path[len(self.edPath.text())+1:]
+
+    def build(self, f):
+        if f.endswith('.ui'):
+            pathname = os.path.dirname(f)
+            filename = os.path.basename(f)
+
+            fdest = os.path.join(pathname, 'ui_%s.py' % filename[:-3])
+
+            os.system('pyuic %s -o %s' % (f, fdest))
+            
+            self.outmsg("<font color=blue>Convert %s into %s</font>" %
+                (self.relativePath(f), self.relativePath(fdest)))
+
+    def clean(self, f):
+        if os.path.basename(f).startswith('ui_') and f.endswith('.py'):
+            os.remove(f)
+            self.outmsg("<font color=green>%s is removed</font>" % self.relativePath(f))
+
+    def process(self, dotask):
+        path = self.edPath.text()
+        if not os.path.isdir(path):
+            self.outmsg("<font color=red>%s is not a path!</font>" % path)
+            return
+
+        if self.chkRecursive.isChecked():
+            for dirpath, dirnames, files in os.walk(path):
+                for f in files:
+                    dotask(os.path.join(dirpath, f))
+        else:
+            for f in os.listdir(path):
+                fname = os.path.join(path, f)
+                if os.path.isfile(fname):
+                    dotask(fname)
+
+        self.outmsg('-'*50)
+
+    def outmsg(self, msg):
+        self.output.append(msg)
+
     def closeEvent(self, event):
         self.saveSettings()
-
-
 
     def loadSettings(self):
         self.loadOneSetting(self.geometrySettingKey, lambda x: self.restoreGeometry(x))
