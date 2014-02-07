@@ -37,14 +37,16 @@ class MakePyQtDlg(QDialog, Ui_MakePyQtDlg):
 
             fdest = os.path.join(pathname, 'ui_%s.py' % filename[:-3])
 
-            os.system('pyuic %s -o %s' % (f, fdest))
+            if not self.isDryRun():
+                os.system('pyuic %s -o %s' % (f, fdest))
             
             self.outmsg("<font color=blue>Convert %s into %s</font>" %
                 (self.relativePath(f), self.relativePath(fdest)))
 
     def clean(self, f):
         if os.path.basename(f).startswith('ui_') and f.endswith('.py'):
-            os.remove(f)
+            if not self.isDryRun():
+                os.remove(f)
             self.outmsg("<font color=green>%s is removed</font>" % self.relativePath(f))
 
     def process(self, dotask):
@@ -53,7 +55,7 @@ class MakePyQtDlg(QDialog, Ui_MakePyQtDlg):
             self.outmsg("<font color=red>%s is not a path!</font>" % path)
             return
 
-        if self.chkRecursive.isChecked():
+        if self.isRecursive():
             for dirpath, dirnames, files in os.walk(path):
                 for f in files:
                     dotask(os.path.join(dirpath, f))
@@ -68,30 +70,35 @@ class MakePyQtDlg(QDialog, Ui_MakePyQtDlg):
     def outmsg(self, msg):
         self.output.append(msg)
 
+    def isRecursive(self):  return self.chkRecursive.isChecked()
+    def isDryRun(self):     return self.chkDryRun.isChecked()
+
     def closeEvent(self, event):
         self.saveSettings()
 
     def loadSettings(self):
-        self.loadOneSetting(self.geometrySettingKey, lambda x: self.restoreGeometry(x))
-        self.loadOneSetting(self.pathSettingKey, lambda x: self.edPath.setText(x))
-        self.loadOneSetting(self.recursiveSettingKey, lambda x: self.chkRecursive.setChecked(x))
+        self.loadOneSetting(self.geometrySettingKey, lambda x: self.restoreGeometry(x) if x else None)
+        self.loadOneSetting(self.pathSettingKey, lambda x: self.edPath.setText(x if x else ''))
+        self.loadOneSetting(self.recursiveSettingKey, lambda x: self.chkRecursive.setChecked(x if x else True))
+        self.loadOneSetting(self.dryRunSettingKey, lambda x: self.chkDryRun.setChecked(x if x else False))
 
     def loadOneSetting(self, keyFunc, setFunc):
         settings = QSettings()
         setting = settings.value(keyFunc())
-        if setting:
-            setFunc(setting)
+        setFunc(setting)
 
     def saveSettings(self):
         settings = QSettings()
         settings.setValue(self.geometrySettingKey(), self.saveGeometry())
         settings.setValue(self.pathSettingKey(), self.edPath.text())
         settings.setValue(self.recursiveSettingKey(), self.chkRecursive.isChecked())
+        settings.setValue(self.dryRunSettingKey(), self.chkDryRun.isChecked())
 
     def settingsMainKey(self):      return "MainWindow"
     def geometrySettingKey(self):   return self.settingsMainKey() + '/Geometry'
     def pathSettingKey(self):       return self.settingsMainKey() + '/Path'
     def recursiveSettingKey(self):  return self.settingsMainKey() + '/Recursive'
+    def dryRunSettingKey(self):     return self.settingsMainKey() + '/DryRun'
 
 
 app = QApplication(sys.argv)

@@ -132,12 +132,26 @@
     </sizepolicy>
    </property>
   </widget>
+  <widget class="QCheckBox" name="chkDryRun">
+   <property name="geometry">
+    <rect>
+     <x>70</x>
+     <y>365</y>
+     <width>87</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Dry Run</string>
+   </property>
+  </widget>
   <zorder>layoutWidget</zorder>
   <zorder>chkRecursive</zorder>
   <zorder>lblPath</zorder>
   <zorder>edPath</zorder>
   <zorder>btnBrowsePath</zorder>
   <zorder>output</zorder>
+  <zorder>chkDryRun</zorder>
  </widget>
  <resources/>
  <connections>
