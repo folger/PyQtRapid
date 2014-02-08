@@ -38,7 +38,7 @@ class MakePyQtDlg(QDialog, Ui_MakePyQtDlg):
             fdest = os.path.join(pathname, 'ui_%s.py' % filename[:-3])
 
             if not self.isDryRun():
-                os.system('pyuic %s -o %s' % (f, fdest))
+                os.system('pyuic4 %s -o %s' % (f, fdest))
             
             self.outmsg("<font color=blue>Convert %s into %s</font>" %
                 (self.relativePath(f), self.relativePath(fdest)))
