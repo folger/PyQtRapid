@@ -77,10 +77,10 @@ class MakePyQtDlg(QDialog, Ui_MakePyQtDlg):
         self.saveSettings()
 
     def loadSettings(self):
-        self.loadOneSetting(self.geometrySettingKey, lambda x: self.restoreGeometry(x) if x else None)
-        self.loadOneSetting(self.pathSettingKey, lambda x: self.edPath.setText(x if x else ''))
-        self.loadOneSetting(self.recursiveSettingKey, lambda x: self.chkRecursive.setChecked(x if x else True))
-        self.loadOneSetting(self.dryRunSettingKey, lambda x: self.chkDryRun.setChecked(x if x else False))
+        self.loadOneSetting(self.geometrySettingKey, lambda x: self.restoreGeometry(x if x != None else QByteArray()))
+        self.loadOneSetting(self.pathSettingKey, lambda x: self.edPath.setText(x))
+        self.loadOneSetting(self.recursiveSettingKey, lambda x: self.chkRecursive.setChecked(x if x != None else True))
+        self.loadOneSetting(self.dryRunSettingKey, lambda x: self.chkDryRun.setChecked(x if x != None else False))
 
     def loadOneSetting(self, keyFunc, setFunc):
         settings = QSettings()
