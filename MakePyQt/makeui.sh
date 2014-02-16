@@ -1,6 +1,5 @@
 #! /bin/bash
 
-# pyuic MakePyQt.ui -o ui_MakePyQt.py
 for f in $(ls); do
   if [ "${f:${#f}-3:3}" == ".ui" ]; then
     n=ui_${f:0:${#f}-3}.py
